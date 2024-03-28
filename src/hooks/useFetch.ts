@@ -1,11 +1,12 @@
 import { GraphQLClient } from "graphql-request";
 import { useEffect, useState } from "react";
 
+
 const graphQLClient = new GraphQLClient("https://rickandmortyapi.com/graphql");
 
 export const useFetch = (query: string) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<any>([]);
   const [error, setError] = useState<string | unknown>();
 
   useEffect(() => {
