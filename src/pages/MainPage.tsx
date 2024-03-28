@@ -9,7 +9,6 @@ export const MainPage = () => {
 
   return (
     <div className="main-cnt">
-      <input type="text" placeholder="PLACEHOLDER" />
       <div className="list-cnt">
         <List data={data} isLoading={isLoading} error={error} />
       </div>

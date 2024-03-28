@@ -21,4 +21,11 @@
     isLoading: boolean;
   };
 
-  
+  export type Character = {
+      name: string;
+      image: string;
+      id: string;
+      status: string;
+      species: string;
+      origin: any;
+  }
