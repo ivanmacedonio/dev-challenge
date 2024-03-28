@@ -1,11 +1,14 @@
 const apiQuery = `
 query {
-  characters {
-    info {
-      count
-    }
-    results {
-      name
+  characters{
+    info{count}
+    results{
+      name,
+      image,
+      id,
+      status,
+      species,
+      origin{name}
     }
   }
   locations {

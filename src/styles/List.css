@@ -1,0 +1,15 @@
+.list-map-cnt img{
+    max-width: 5rem;
+}
+
+.list-map-cnt{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 2rem;
+}
+
+.item-card{
+    border: 1px solid gray;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+}
