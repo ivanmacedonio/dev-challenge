@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 import "../styles/List.css";
 import { Character, FetchType } from "../types";
-
+import { Dropdown } from "./Dropdown";
 export const List: React.FC<FetchType> = ({
   data,
   isLoading,
   error,
 }: FetchType) => {
-  const [filteredData, setFilteredData] = useState<Character[] | undefined>(
+  const [filteredData, setFilteredData] = useState<Character[] | any>(
     undefined
   );
   if (isLoading) {
     return <div className="loading-cnt">Cargando...</div>;
   }
   if (error) {
-    alert(error);
+    console.log(error);
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tempData = data?.characters.results.filter((item: Character) =>
       item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    console.log(tempData);
     setFilteredData(tempData);
   };
+
   return (
     <React.Fragment>
       <input
@@ -31,6 +31,7 @@ export const List: React.FC<FetchType> = ({
         onChange={handleChange}
         placeholder="Rick Sanchez, Summer, Alexander..."
       />
+      <Dropdown setter={setFilteredData}></Dropdown>
 
       {filteredData === undefined ? (
         <div className="list-map-cnt">
