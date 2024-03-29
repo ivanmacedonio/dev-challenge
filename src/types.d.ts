@@ -27,5 +27,7 @@
       id: string;
       status: string;
       species: string;
-      origin: any;
+      origin: {
+        name: string
+      }
   }
