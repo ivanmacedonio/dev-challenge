@@ -25,11 +25,12 @@ export const Dropdown: React.FC<Props> = ({ setter }) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
   const [openSpecie, setopenSpecie] = useState(false);
+  const [filters, setFilters] = useState([]);
 
   const handleChangeData = async ({ type, value }: ChangeDataProps) => {
-    const filter = { [type]: value };
-    const query = apiQueryFiltered(filter);
-
+    const newFilters = { ...filters, [type]: value };
+    setFilters(newFilters);
+    const query = apiQueryFiltered(newFilters);
     try {
       const data: DataProps = await graphQLClient.request(query);
       setter(data.characters.results);
