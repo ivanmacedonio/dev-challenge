@@ -5,9 +5,11 @@ import { Character } from "../types";
 import { apiQueryFiltered } from "../utils/apiConfig";
 
 const graphQLClient = new GraphQLClient("https://rickandmortyapi.com/graphql");
-
 type Props = {
-  setter: React.Dispatch<React.SetStateAction<Character[]>>;
+  setter: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
+  aux: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
+  setIsFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  data: Character[] | undefined;
 };
 
 type ChangeDataProps = {
@@ -17,11 +19,16 @@ type ChangeDataProps = {
 
 type DataProps = {
   characters: {
-    results: any[];
+    results: Character[];
   };
 };
 
-export const Dropdown: React.FC<Props> = ({ setter }) => {
+export const Dropdown: React.FC<Props> = ({
+  setter,
+  data,
+  setIsFilter,
+  aux, //aux works like the copy of filteredData, because filter the data in the main array break the data filtering
+}) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
   const [openSpecie, setopenSpecie] = useState(false);
@@ -34,13 +41,21 @@ export const Dropdown: React.FC<Props> = ({ setter }) => {
     try {
       const data: DataProps = await graphQLClient.request(query);
       setter(data.characters.results);
+      aux(data.characters.results);
+      setIsFilter(true);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const handleClear = () => {
+    setter(data);
+    setIsFilter(false);
+  };
+
   return (
     <div className="dropdown-cnt">
+      <button onClick={handleClear}>Clear</button>
       <div className="button-cnt">
         <button
           onClick={() => {
@@ -107,6 +122,58 @@ export const Dropdown: React.FC<Props> = ({ setter }) => {
               }}
             >
               Alien
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({ type: "species", value: "Humanoid" });
+              }}
+            >
+              Humanoid
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({
+                  type: "species",
+                  value: "Mythological Creature",
+                });
+              }}
+            >
+              Mythological Creature
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({ type: "species", value: "Animal" });
+              }}
+            >
+              Animal
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({ type: "species", value: "Robot" });
+              }}
+            >
+              Robot
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({ type: "species", value: "Cronenberg" });
+              }}
+            >
+              Cronenberg
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({ type: "species", value: "Disease" });
+              }}
+            >
+              Disease
+            </li>
+            <li
+              onClick={() => {
+                handleChangeData({ type: "species", value: "unknown" });
+              }}
+            >
+              unknown
             </li>
           </ul>
         ) : (

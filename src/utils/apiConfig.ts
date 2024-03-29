@@ -70,6 +70,17 @@ export const apiQueryFiltered = (filters:any) => {
   `;
 };
 
+export const apiSpecies = `
+query {
+  characters {
+    results {
+      species
+    }
+  }
+}
+
+`
+
 
 
 export default apiQuery;
