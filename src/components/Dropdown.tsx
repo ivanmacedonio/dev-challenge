@@ -1,7 +1,10 @@
+import { GraphQLClient } from "graphql-request";
 import { useState } from "react";
 import "../styles/Dropdown.css";
 import { Character } from "../types";
 import { apiQueryFiltered } from "../utils/apiConfig";
+
+const graphQLClient = new GraphQLClient("https://rickandmortyapi.com/graphql");
 
 type Props = {
   setter: React.Dispatch<React.SetStateAction<Character[]>>;
@@ -12,27 +15,27 @@ type ChangeDataProps = {
   value: string;
 };
 
+type DataProps = {
+  characters: {
+    results: any[];
+  };
+};
+
 export const Dropdown: React.FC<Props> = ({ setter }) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
   const [openSpecie, setopenSpecie] = useState(false);
 
   const handleChangeData = async ({ type, value }: ChangeDataProps) => {
-    const filter = { [type]: value }; // Crear el objeto de filtro
-    const query = apiQueryFiltered(filter); // Obtener la consulta GraphQL con el filtro aplicado
+    const filter = { [type]: value };
+    const query = apiQueryFiltered(filter);
 
-    const response = await fetch("https://rickandmortyapi.com/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: query, // Utiliza la consulta obtenida
-      }),
-    });
-
-    const data = await response.json();
-    setter(data.data?.characters.results);
+    try {
+      const data: DataProps = await graphQLClient.request(query);
+      setter(data.characters.results);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
