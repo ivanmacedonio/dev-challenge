@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import "../styles/List.css";
 import { Character, FetchType } from "../types";
 import { Dropdown } from "./Dropdown";
+import { Modal } from "./Modal";
 export const List: React.FC<FetchType> = ({
   data,
   isLoading,
@@ -14,6 +15,16 @@ export const List: React.FC<FetchType> = ({
     undefined
   );
   const [isFilter, setIsFilter] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<Character>({
+    id: "",
+    name: "",
+    image: "",
+    species: "",
+    status: "",
+    origin: {
+      name: "",
+    },
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) {
@@ -41,6 +52,7 @@ export const List: React.FC<FetchType> = ({
 
   return (
     <React.Fragment>
+      <Modal modalData={modalData}></Modal>
       <input
         type="text"
         onChange={handleChange}
@@ -58,8 +70,21 @@ export const List: React.FC<FetchType> = ({
 
       {copyFiltered === undefined ? (
         <div className="list-map-cnt">
-          {data?.characters.results.map((item: any) => (
-            <div className="item-card" key={item.id}>
+          {data?.characters.results.map((item: Character) => (
+            <div
+              className="item-card"
+              key={item.id}
+              onClick={() => {
+                setModalData({
+                  id: item.id,
+                  name: item.name,
+                  image: item.image,
+                  origin: item.origin,
+                  status: item.status,
+                  species: item.species,
+                });
+              }}
+            >
               <img src={item.image} alt={item.name} />
               <p>{item.name}</p>
               <p>Status: {item.status}</p>
