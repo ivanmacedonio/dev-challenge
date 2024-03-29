@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { useState } from "react";
+import { RefObject, useState } from "react";
 import "../styles/Dropdown.css";
 import { Character } from "../types";
 import { apiQueryFiltered } from "../utils/apiConfig";
@@ -9,6 +9,7 @@ type Props = {
   setter: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
   aux: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
   setIsFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  inputRef: RefObject<HTMLInputElement>;
   data: Character[] | undefined;
 };
 
@@ -28,6 +29,7 @@ export const Dropdown: React.FC<Props> = ({
   data,
   setIsFilter,
   aux, //aux works like the copy of filteredData, because filter the data in the main array break the data filtering
+  inputRef,
 }) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
@@ -50,7 +52,10 @@ export const Dropdown: React.FC<Props> = ({
 
   const handleClear = () => {
     setter(data);
+    aux(data);
+    setFilters([]);
     setIsFilter(false);
+    inputRef.current && (inputRef.current.value = "");
   };
 
   return (

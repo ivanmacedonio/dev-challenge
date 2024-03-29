@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import "../styles/List.css";
 import { Character, FetchType } from "../types";
 import { Dropdown } from "./Dropdown";
@@ -14,10 +14,8 @@ export const List: React.FC<FetchType> = ({
     undefined
   );
   const [isFilter, setIsFilter] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    console.log(filteredData);
-  }, [filteredData]);
   if (isLoading) {
     return <div className="loading-cnt">Cargando...</div>;
   }
@@ -47,6 +45,7 @@ export const List: React.FC<FetchType> = ({
         type="text"
         onChange={handleChange}
         placeholder="Rick Sanchez, Summer, Alexander..."
+        ref={inputRef}
       />
 
       <Dropdown
@@ -54,6 +53,7 @@ export const List: React.FC<FetchType> = ({
         aux={setCopyFiltered}
         data={data?.characters.results}
         setIsFilter={setIsFilter}
+        inputRef={inputRef}
       ></Dropdown>
 
       {copyFiltered === undefined ? (
