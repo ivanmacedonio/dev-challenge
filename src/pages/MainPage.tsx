@@ -7,7 +7,7 @@ import apiQuery from "../utils/apiConfig";
 
 export const MainPage = () => {
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading, error }: FetchType = useFetch(apiQuery, page);
+  const { data, isLoading, error }: FetchType = useFetch(apiQuery(page));
 
   return (
     <div className="main-cnt">

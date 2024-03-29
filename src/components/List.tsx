@@ -14,7 +14,7 @@ export const List: React.FC<FetchType & SetPageType> = ({
   isLoading,
   error,
   setPage,
-  initialStatePage
+  initialStatePage,
 }: FetchType & SetPageType) => {
   const [filteredData, setFilteredData] = useState<Character[] | any>(
     undefined
@@ -58,8 +58,12 @@ export const List: React.FC<FetchType & SetPageType> = ({
     }
   };
 
-  const handlePagination = () => {
-    setPage(initialStatePage + 1);
+  const handlePagination = (param: boolean) => {
+    if (param === true) {
+      setPage(initialStatePage + 1);
+    } else {
+      setPage(initialStatePage - 1);
+    }
   };
 
   return (
@@ -118,8 +122,14 @@ export const List: React.FC<FetchType & SetPageType> = ({
           ))}
         </div>
       )}
-      <button className="pagination-btn" onClick={handlePagination}>
-        Paginar
+      <button
+        className="pagination-btn"
+        onClick={() => handlePagination(false)}
+      >
+        Volver
+      </button>
+      <button className="pagination-btn" onClick={() => handlePagination(true)}>
+        Ver mas
       </button>
     </React.Fragment>
   );

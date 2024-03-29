@@ -1,36 +1,38 @@
-const apiQuery = `
-query {
-  characters{
-    info{count}
-    results{
-      name,
-      image,
-      gender,
-      id,
-      status,
-      species,
-      origin{name}
+const apiQuery = (page:number) => {
+  return `
+  query {
+    characters (page: ${page}){
+      info{count}
+      results{
+        name,
+        image,
+        gender,
+        id,
+        status,
+        species,
+        origin{name}
+      }
+    }
+    locations {
+      info {
+        count
+      }
+      results {
+        name
+      }
+    }
+    episodes {
+      info {
+        count
+      }
+      results {
+        name
+      }
     }
   }
-  locations {
-    info {
-      count
-    }
-    results {
-      name
-    }
-  }
-  episodes {
-    info {
-      count
-    }
-    results {
-      name
-    }
-  }
-}
-
-`
+  
+  `
+} 
 
 export const apiQueryFiltered = (filters:any) => {
   const filterString = Object.entries(filters)
