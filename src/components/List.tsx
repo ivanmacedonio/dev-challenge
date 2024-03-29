@@ -3,11 +3,19 @@ import "../styles/List.css";
 import { Character, FetchType } from "../types";
 import { Dropdown } from "./Dropdown";
 import { Modal } from "./Modal";
-export const List: React.FC<FetchType> = ({
+
+type SetPageType = {
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  initialStatePage: number;
+};
+
+export const List: React.FC<FetchType & SetPageType> = ({
   data,
   isLoading,
   error,
-}: FetchType) => {
+  setPage,
+  initialStatePage
+}: FetchType & SetPageType) => {
   const [filteredData, setFilteredData] = useState<Character[] | any>(
     undefined
   );
@@ -48,6 +56,10 @@ export const List: React.FC<FetchType> = ({
       );
       setCopyFiltered(newData);
     }
+  };
+
+  const handlePagination = () => {
+    setPage(initialStatePage + 1);
   };
 
   return (
@@ -106,6 +118,9 @@ export const List: React.FC<FetchType> = ({
           ))}
         </div>
       )}
+      <button className="pagination-btn" onClick={handlePagination}>
+        Paginar
+      </button>
     </React.Fragment>
   );
 };
