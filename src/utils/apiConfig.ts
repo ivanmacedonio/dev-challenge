@@ -34,13 +34,13 @@ const apiQuery = (page:number) => {
   `
 } 
 
-export const apiQueryFiltered = (filters:any) => {
+export const apiQueryFiltered = (filters:any, page:number) => {
   const filterString = Object.entries(filters)
     .map(([key, value]) => `${key}: "${value}"`)
     .join(", ");
   return `
     query {
-      characters (filter: {${filterString}}) {
+      characters (page:${page},filter: {${filterString}}) {
         info{count}
         results{
           name,

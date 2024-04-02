@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../styles/Modal.css";
 import { Character } from "../types";
 
@@ -6,10 +6,7 @@ type ModalProps = {
   modalData: Character;
 };
 export const Modal: React.FC<ModalProps> = (modalData) => {
-  const [openModal, setOpenModal] = useState<boolean>(true);
-  useEffect(() => {
-    console.log(modalData);
-  }, [modalData]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   return (
     <div className="modal-cont">
       {openModal && (

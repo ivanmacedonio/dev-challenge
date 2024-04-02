@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../styles/List.css";
 import { Character, FetchType } from "../types";
 import { Dropdown } from "./Dropdown";
@@ -22,6 +22,8 @@ export const List: React.FC<FetchType & SetPageType> = ({
   const [copyFiltered, setCopyFiltered] = useState<Character[] | any>(
     undefined
   );
+  const [previousPageData, setPreviousPageData] = useState<Character[]>([]);
+  const [filterPage, setFilterPage] = useState<number>(1);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [modalData, setModalData] = useState<Character>({
     id: "",
@@ -34,6 +36,23 @@ export const List: React.FC<FetchType & SetPageType> = ({
     },
   });
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (data?.characters !== undefined) {
+      setPreviousPageData(data.characters.results);
+    }
+  }, [data]);
+
+  const handlePagination = () => {
+    if (isFilter === true) {
+      setFilterPage(filterPage + 1);
+    } else {
+      setPage(initialStatePage + 1);
+    }
+    if (data?.characters !== undefined) {
+      setPreviousPageData([...previousPageData, ...data?.characters.results]);
+    }
+  };
 
   if (isLoading) {
     return <div className="loading-cnt">Cargando...</div>;
@@ -58,14 +77,6 @@ export const List: React.FC<FetchType & SetPageType> = ({
     }
   };
 
-  const handlePagination = (param: boolean) => {
-    if (param === true) {
-      setPage(initialStatePage + 1);
-    } else {
-      setPage(initialStatePage - 1);
-    }
-  };
-
   return (
     <React.Fragment>
       <Modal modalData={modalData}></Modal>
@@ -82,11 +93,12 @@ export const List: React.FC<FetchType & SetPageType> = ({
         data={data?.characters.results}
         setIsFilter={setIsFilter}
         inputRef={inputRef}
+        filterPage={filterPage}
       ></Dropdown>
 
-      {copyFiltered === undefined ? (
+      {filteredData === undefined ? (
         <div className="list-map-cnt">
-          {data?.characters.results.map((item: Character) => (
+          {previousPageData.map((item: Character) => (
             <div
               className="item-card"
               key={item.id}
@@ -111,7 +123,7 @@ export const List: React.FC<FetchType & SetPageType> = ({
         </div>
       ) : (
         <div className="list-map-cnt">
-          {copyFiltered?.map((item: any) => (
+          {filteredData?.map((item: any) => (
             <div className="item-card" key={item.id}>
               <img src={item.image} alt={item.name} />
               <p>{item.name}</p>
@@ -122,13 +134,7 @@ export const List: React.FC<FetchType & SetPageType> = ({
           ))}
         </div>
       )}
-      <button
-        className="pagination-btn"
-        onClick={() => handlePagination(false)}
-      >
-        Volver
-      </button>
-      <button className="pagination-btn" onClick={() => handlePagination(true)}>
+      <button className="pagination-btn" onClick={() => handlePagination()}>
         Ver mas
       </button>
     </React.Fragment>

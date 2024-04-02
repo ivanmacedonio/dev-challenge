@@ -22,7 +22,6 @@ export const useFetch = (query: string) => {
     };
 
     fetchData();
-    console.log(data)
   }, [query]);
 
   return { isLoading, data, error };
