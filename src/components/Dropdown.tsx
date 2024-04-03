@@ -7,9 +7,9 @@ import { apiQueryFiltered } from "../utils/apiConfig";
 const graphQLClient = new GraphQLClient("https://rickandmortyapi.com/graphql");
 type Props = {
   setFiltered: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
-  copyFiltered: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
   setFilterPage: React.Dispatch<React.SetStateAction<number>>;
   setIsFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  searchTerm: string | undefined;
   inputRef: RefObject<HTMLInputElement>;
   data: Character[] | undefined;
   filterPage: number;
@@ -32,8 +32,8 @@ export const Dropdown: React.FC<Props> = ({
   setIsFilter,
   inputRef,
   filterPage,
-  copyFiltered, //store the original filtered array,
   setFilterPage,
+  searchTerm,
 }) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
@@ -46,11 +46,10 @@ export const Dropdown: React.FC<Props> = ({
     const handleChangeData = async ({ type, value }: ChangeDataProps) => {
       const newFilters = { ...filters, [type]: value };
       setFilters(newFilters);
-      const query = apiQueryFiltered(newFilters, filterPage);
+      const query = apiQueryFiltered(newFilters, filterPage, searchTerm);
       try {
         const data: DataProps = await graphQLClient.request(query);
         setFiltered(data.characters.results);
-        copyFiltered(data.characters.results);
         setIsFilter(true);
       } catch (error) {
         console.error(error);
@@ -59,11 +58,10 @@ export const Dropdown: React.FC<Props> = ({
     if (filterType !== "") {
       handleChangeData({ type: filterType, value: filterValue });
     }
-  }, [filterPage, filterType]);
+  }, [filterPage, filterType, searchTerm]);
 
   const handleClear = () => {
-    setFiltered(data);
-    copyFiltered(data);
+    setFiltered(undefined);
     setFilters([]);
     setIsFilter(false);
     setFilterPage(1);

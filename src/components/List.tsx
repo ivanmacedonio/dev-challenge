@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import "../styles/List.css";
 import { Character, FetchType } from "../types";
 import { Dropdown } from "./Dropdown";
@@ -21,12 +21,9 @@ export const List: React.FC<FetchType & SetPageType> = ({
   const [filteredData, setFilteredData] = useState<Character[] | undefined>(
     undefined
   );
-  const [copyFiltered, setCopyFiltered] = useState<Character[] | undefined>(
-    undefined
-  );
-  const [previousPageData, setPreviousPageData] = useState<Character[]>([]);
   const [filterPage, setFilterPage] = useState<number>(1);
   const [isFilter, setIsFilter] = useState<boolean>(false);
+  const [searchParam, setSearchParam] = useState<string>("");
   const [modalData, setModalData] = useState<Character>({
     id: "",
     name: "",
@@ -38,12 +35,6 @@ export const List: React.FC<FetchType & SetPageType> = ({
     },
   });
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (data?.characters !== undefined) {
-      setPreviousPageData(data.characters.results);
-    }
-  }, [data]);
 
   const handlePagination = (param: boolean) => {
     if (isFilter === true) {
@@ -59,9 +50,6 @@ export const List: React.FC<FetchType & SetPageType> = ({
         setPage(initialStatePage - 1);
       }
     }
-    if (data?.characters !== undefined) {
-      setPreviousPageData([...previousPageData, ...data?.characters.results]);
-    }
   };
 
   if (isLoading) {
@@ -71,38 +59,30 @@ export const List: React.FC<FetchType & SetPageType> = ({
     console.log(error);
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value.toLowerCase();
-    if (isFilter && copyFiltered !== undefined) {
-      const newData = copyFiltered.filter((item: Character) =>
-        item.name.toLowerCase().includes(searchTerm)
-      );
-      setFilteredData(newData);
-    } else {
-      const newData = data?.characters.results.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm)
-      );
-      if (newData !== undefined) {
-        setPreviousPageData(newData);
-      }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputRef.current) {
+      setSearchParam(inputRef.current.value);
     }
   };
 
   return (
     <React.Fragment>
       <Modal modalData={modalData}></Modal>
-      <input
-        type="text"
-        onChange={handleChange}
-        placeholder="Rick Sanchez, Summer, Alexander..."
-        ref={inputRef}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Rick Sanchez, Summer, Alexander..."
+          ref={inputRef}
+        />
+        <button type="submit">Search</button>
+      </form>
 
       <Dropdown
+        searchTerm={searchParam}
         setFiltered={setFilteredData}
         data={data?.characters.results}
         setIsFilter={setIsFilter}
-        copyFiltered={setCopyFiltered}
         inputRef={inputRef}
         filterPage={filterPage}
         setFilterPage={setFilterPage}
@@ -156,9 +136,16 @@ export const List: React.FC<FetchType & SetPageType> = ({
       ) : (
         ""
       )}
-      <button className="pagination-btn" onClick={() => handlePagination(true)}>
-        Siguiente
-      </button>
+      {data?.characters.results.length < 20 || filteredData?.length < 20 ? (
+        ""
+      ) : (
+        <button
+          className="pagination-btn"
+          onClick={() => handlePagination(true)}
+        >
+          Siguiente
+        </button>
+      )}
     </React.Fragment>
   );
 };
