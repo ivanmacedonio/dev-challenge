@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { Header } from "../components/Header";
 import { List } from "../components/List";
 import { useFetch } from "../hooks/useFetch";
 import "../styles/MainPage.css";
 import { FetchType } from "../types";
 import apiQuery from "../utils/apiConfig";
-
 export const MainPage = () => {
   const [page, setPage] = useState<number>(1);
   const { data, isLoading, error }: FetchType = useFetch(apiQuery(page));
 
   return (
     <div className="main-cnt">
+      <Header></Header>
       <div className="list-cnt">
         <List
           page={page}

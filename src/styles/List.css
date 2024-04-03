@@ -1,19 +1,134 @@
-.list-map-cnt img{
+.list-map-cnt img {
     max-width: 5rem;
 }
 
-.list-map-cnt{
+.mainpage-cnt{
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(2,1fr);
+    gap: 5rem;
+    max-width: 80%;
+}
+
+.list-map-cnt {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
 }
 
-.item-card{
+.item-card {
     border: 1px solid gray;
     border-radius: 0.5rem;
     padding: 1rem 2rem;
 }
 
-.pagination-btn{
+.pagination-btn {
     margin: 10rem;
+}
+
+.form-cnt {
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.form-cnt input {
+    background-color: rgb(64, 119, 114);
+    font-size: 1.2rem;
+    outline: none;
+    border: none;
+    border-radius: 0.2rem;
+    padding: 0.5rem 2rem;
+    font-weight: 500;
+}
+
+.form-cnt input::placeholder {
+    color: rgb(167, 208, 204);
+    font-size: 1.2rem;
+}
+
+.list-map-cnt {
+    margin: 0 auto;
+    max-width: 90%;
+}
+
+.item-card {
+    display: flex;
+    height: fit-content;
+    flex-direction: column;
+    text-align: left;
+    background-color: rgb(12, 125, 133);
+    cursor: pointer;
+}
+
+.item-card h2 {
+    font-size: 1.3rem;
+    background-color: inherit;
+    margin-bottom: 5px;
+}
+
+.item-card h4 {
+    font-weight: 500;
+    background-color: inherit;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.item-card p {
+    background-color: inherit;
+}
+
+.alive {
+    width: 10px;
+    height: 10px;
+    background-color: rgb(0, 222, 0);
+    border-radius: 50%;
+}
+
+.dead {
+    width: 10px;
+    height: 10px;
+    background-color: rgb(252, 39, 39);
+    border-radius: 50%;
+}
+
+.item-card img {
+    min-width: 10rem;
+    border-radius: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+.separator {
+    max-width: 80%;
+    margin: 0 auto;
+    margin-bottom: 3rem;
+}
+
+.separator h2 {
+    color: rgb(197, 224, 118);
+    margin-bottom: 1rem;
+    font-size: 2.4rem;
+}
+
+.separator hr {
+    background-color: rgb(197, 224, 118);
+}
+.pagination-buttons{
+    display: flex;
+    justify-content: center;
+    margin: 5rem 0;
+    gap: 1rem;
+}
+
+
+.pagination-buttons button{
+    font-size: 1rem;
+    font-weight: bolder;
+    outline: none;
+    border: none;
+    background-color: rgb(5, 27, 28);
+    padding: 0.5rem 2rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+
 }
