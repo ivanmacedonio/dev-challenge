@@ -64,16 +64,17 @@ export const List: React.FC<FetchType & SetPageType> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     if (isFilter) {
-      const newData = filteredData.filter((item: Character) =>
+      const newData = copyFiltered.filter((item: Character) =>
         item.name.toLowerCase().includes(searchTerm)
       );
-      console.log(newData);
-      setCopyFiltered(newData);
+      setFilteredData(newData);
     } else {
       const newData = data?.characters.results.filter((item) =>
         item.name.toLowerCase().includes(searchTerm)
       );
-      setCopyFiltered(newData);
+      if (newData !== undefined) {
+        setPreviousPageData(newData);
+      }
     }
   };
 
@@ -88,12 +89,13 @@ export const List: React.FC<FetchType & SetPageType> = ({
       />
 
       <Dropdown
-        setter={setFilteredData}
-        aux={setCopyFiltered}
+        setFiltered={setFilteredData}
         data={data?.characters.results}
         setIsFilter={setIsFilter}
+        copyFiltered={setCopyFiltered}
         inputRef={inputRef}
         filterPage={filterPage}
+        setFilterPage={setFilterPage}
       ></Dropdown>
 
       {filteredData === undefined ? (

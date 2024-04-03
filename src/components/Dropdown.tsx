@@ -6,8 +6,9 @@ import { apiQueryFiltered } from "../utils/apiConfig";
 
 const graphQLClient = new GraphQLClient("https://rickandmortyapi.com/graphql");
 type Props = {
-  setter: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
-  aux: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
+  setFiltered: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
+  copyFiltered: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
+  setFilterPage: React.Dispatch<React.SetStateAction<number>>
   setIsFilter: React.Dispatch<React.SetStateAction<boolean>>;
   inputRef: RefObject<HTMLInputElement>;
   data: Character[] | undefined;
@@ -26,17 +27,19 @@ type DataProps = {
 };
 
 export const Dropdown: React.FC<Props> = ({
-  setter,
+  setFiltered,
   data,
   setIsFilter,
-  aux, //aux works like the copy of filteredData, because filter the data in the main array break the data filtering
   inputRef,
   filterPage,
+  copyFiltered, //store the original filtered array,
+  setFilterPage
 }) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
   const [openSpecie, setopenSpecie] = useState(false);
   const [filters, setFilters] = useState([]);
+
 
   const handleChangeData = async ({ type, value }: ChangeDataProps) => {
     const newFilters = { ...filters, [type]: value };
@@ -44,8 +47,9 @@ export const Dropdown: React.FC<Props> = ({
     const query = apiQueryFiltered(newFilters, filterPage);
     try {
       const data: DataProps = await graphQLClient.request(query);
-      setter(data.characters.results);
-      aux(data.characters.results);
+      setFiltered(data.characters.results);
+      copyFiltered(data.characters.results);
+      console.log(filterPage)
       setIsFilter(true);
     } catch (error) {
       console.error(error);
@@ -53,10 +57,11 @@ export const Dropdown: React.FC<Props> = ({
   };
 
   const handleClear = () => {
-    setter(data);
-    aux(data);
+    setFiltered(data);
+    copyFiltered(data);
     setFilters([]);
     setIsFilter(false);
+    setFilterPage(1)
     inputRef.current && (inputRef.current.value = "");
   };
 
