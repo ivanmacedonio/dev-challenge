@@ -116,7 +116,20 @@ export const List: React.FC<FetchType & SetPageType> = ({
       ) : (
         <div className="list-map-cnt">
           {filteredData?.map((item: Character) => (
-            <div className="item-card" key={item.id}>
+            <div
+              className="item-card"
+              key={item.id}
+              onClick={() => {
+                setModalData({
+                  id: item.id,
+                  name: item.name,
+                  image: item.image,
+                  origin: item.origin,
+                  status: item.status,
+                  species: item.species,
+                });
+              }}
+            >
               <img src={item.image} alt={item.name} />
               <p>{item.name}</p>
               <p>Status: {item.status}</p>

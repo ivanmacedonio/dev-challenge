@@ -6,7 +6,7 @@ type ModalProps = {
   modalData: Character;
 };
 export const Modal: React.FC<ModalProps> = (modalData) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(true);
   return (
     <div className="modal-cont">
       {openModal && (
