@@ -13,6 +13,7 @@ export const MainPage = () => {
     <div className="main-cnt">
       <div className="list-cnt">
         <List
+          page={page}
           data={data}
           isLoading={isLoading}
           error={error}

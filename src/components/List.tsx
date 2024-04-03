@@ -7,6 +7,7 @@ import { Modal } from "./Modal";
 type SetPageType = {
   setPage: React.Dispatch<React.SetStateAction<number>>;
   initialStatePage: number;
+  page: number;
 };
 
 export const List: React.FC<FetchType & SetPageType> = ({
@@ -15,11 +16,12 @@ export const List: React.FC<FetchType & SetPageType> = ({
   error,
   setPage,
   initialStatePage,
+  page,
 }: FetchType & SetPageType) => {
-  const [filteredData, setFilteredData] = useState<Character[] | any>(
+  const [filteredData, setFilteredData] = useState<Character[] | undefined>(
     undefined
   );
-  const [copyFiltered, setCopyFiltered] = useState<Character[] | any>(
+  const [copyFiltered, setCopyFiltered] = useState<Character[] | undefined>(
     undefined
   );
   const [previousPageData, setPreviousPageData] = useState<Character[]>([]);
@@ -43,11 +45,19 @@ export const List: React.FC<FetchType & SetPageType> = ({
     }
   }, [data]);
 
-  const handlePagination = () => {
+  const handlePagination = (param: boolean) => {
     if (isFilter === true) {
-      setFilterPage(filterPage + 1);
+      if (param === true) {
+        setFilterPage(filterPage + 1);
+      } else {
+        setFilterPage(filterPage - 1);
+      }
     } else {
-      setPage(initialStatePage + 1);
+      if (param === true) {
+        setPage(initialStatePage + 1);
+      } else {
+        setPage(initialStatePage - 1);
+      }
     }
     if (data?.characters !== undefined) {
       setPreviousPageData([...previousPageData, ...data?.characters.results]);
@@ -63,7 +73,7 @@ export const List: React.FC<FetchType & SetPageType> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
-    if (isFilter) {
+    if (isFilter && copyFiltered !== undefined) {
       const newData = copyFiltered.filter((item: Character) =>
         item.name.toLowerCase().includes(searchTerm)
       );
@@ -100,7 +110,7 @@ export const List: React.FC<FetchType & SetPageType> = ({
 
       {filteredData === undefined ? (
         <div className="list-map-cnt">
-          {previousPageData.map((item: Character) => (
+          {data?.characters.results.map((item: Character) => (
             <div
               className="item-card"
               key={item.id}
@@ -125,7 +135,7 @@ export const List: React.FC<FetchType & SetPageType> = ({
         </div>
       ) : (
         <div className="list-map-cnt">
-          {filteredData?.map((item: any) => (
+          {filteredData?.map((item: Character) => (
             <div className="item-card" key={item.id}>
               <img src={item.image} alt={item.name} />
               <p>{item.name}</p>
@@ -136,8 +146,18 @@ export const List: React.FC<FetchType & SetPageType> = ({
           ))}
         </div>
       )}
-      <button className="pagination-btn" onClick={() => handlePagination()}>
-        Ver mas
+      {page > 1 || filterPage > 1 ? (
+        <button
+          className="pagination-btn"
+          onClick={() => handlePagination(false)}
+        >
+          Anterior
+        </button>
+      ) : (
+        ""
+      )}
+      <button className="pagination-btn" onClick={() => handlePagination(true)}>
+        Siguiente
       </button>
     </React.Fragment>
   );

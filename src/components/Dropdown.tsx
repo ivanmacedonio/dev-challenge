@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import React, { RefObject, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import "../styles/Dropdown.css";
 import { Character } from "../types";
 import { apiQueryFiltered } from "../utils/apiConfig";
@@ -8,7 +8,7 @@ const graphQLClient = new GraphQLClient("https://rickandmortyapi.com/graphql");
 type Props = {
   setFiltered: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
   copyFiltered: React.Dispatch<React.SetStateAction<Character[] | undefined>>;
-  setFilterPage: React.Dispatch<React.SetStateAction<number>>
+  setFilterPage: React.Dispatch<React.SetStateAction<number>>;
   setIsFilter: React.Dispatch<React.SetStateAction<boolean>>;
   inputRef: RefObject<HTMLInputElement>;
   data: Character[] | undefined;
@@ -33,36 +33,46 @@ export const Dropdown: React.FC<Props> = ({
   inputRef,
   filterPage,
   copyFiltered, //store the original filtered array,
-  setFilterPage
+  setFilterPage,
 }) => {
   const [openGender, setopenGender] = useState(false);
   const [openStatus, setopenStatus] = useState(false);
   const [openSpecie, setopenSpecie] = useState(false);
   const [filters, setFilters] = useState([]);
+  const [filterType, setFilterType] = useState("");
+  const [filterValue, setFilterValue] = useState("");
 
-
-  const handleChangeData = async ({ type, value }: ChangeDataProps) => {
-    const newFilters = { ...filters, [type]: value };
-    setFilters(newFilters);
-    const query = apiQueryFiltered(newFilters, filterPage);
-    try {
-      const data: DataProps = await graphQLClient.request(query);
-      setFiltered(data.characters.results);
-      copyFiltered(data.characters.results);
-      console.log(filterPage)
-      setIsFilter(true);
-    } catch (error) {
-      console.error(error);
+  useEffect(() => {
+    const handleChangeData = async ({ type, value }: ChangeDataProps) => {
+      const newFilters = { ...filters, [type]: value };
+      setFilters(newFilters);
+      const query = apiQueryFiltered(newFilters, filterPage);
+      try {
+        const data: DataProps = await graphQLClient.request(query);
+        setFiltered(data.characters.results);
+        copyFiltered(data.characters.results);
+        setIsFilter(true);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (filterType !== "") {
+      handleChangeData({ type: filterType, value: filterValue });
     }
-  };
+  }, [filterPage, filterType]);
 
   const handleClear = () => {
     setFiltered(data);
     copyFiltered(data);
     setFilters([]);
     setIsFilter(false);
-    setFilterPage(1)
+    setFilterPage(1);
     inputRef.current && (inputRef.current.value = "");
+  };
+
+  const setFilterProps = (props: any) => {
+    setFilterType(props.type);
+    setFilterValue(props.value);
   };
 
   return (
@@ -80,28 +90,28 @@ export const Dropdown: React.FC<Props> = ({
           <ul className="dropdown-open">
             <li
               onClick={() => {
-                handleChangeData({ type: "gender", value: "Male" });
+                setFilterProps({ type: "gender", value: "Male" });
               }}
             >
               Male
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "gender", value: "Female" });
+                setFilterProps({ type: "gender", value: "Female" });
               }}
             >
               Female
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "gender", value: "Genderless" });
+                setFilterProps({ type: "gender", value: "Genderless" });
               }}
             >
               Genderless
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "gender", value: "Unknown" });
+                setFilterProps({ type: "gender", value: "Unknown" });
               }}
             >
               Unknown
@@ -123,28 +133,28 @@ export const Dropdown: React.FC<Props> = ({
           <ul className="dropdown-open">
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Human" });
+                setFilterProps({ type: "species", value: "Human" });
               }}
             >
               Human
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Alien" });
+                setFilterProps({ type: "species", value: "Alien" });
               }}
             >
               Alien
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Humanoid" });
+                setFilterProps({ type: "species", value: "Humanoid" });
               }}
             >
               Humanoid
             </li>
             <li
               onClick={() => {
-                handleChangeData({
+                setFilterProps({
                   type: "species",
                   value: "Mythological Creature",
                 });
@@ -154,35 +164,35 @@ export const Dropdown: React.FC<Props> = ({
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Animal" });
+                setFilterProps({ type: "species", value: "Animal" });
               }}
             >
               Animal
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Robot" });
+                setFilterProps({ type: "species", value: "Robot" });
               }}
             >
               Robot
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Cronenberg" });
+                setFilterProps({ type: "species", value: "Cronenberg" });
               }}
             >
               Cronenberg
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "Disease" });
+                setFilterProps({ type: "species", value: "Disease" });
               }}
             >
               Disease
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "species", value: "unknown" });
+                setFilterProps({ type: "species", value: "unknown" });
               }}
             >
               unknown
@@ -204,21 +214,21 @@ export const Dropdown: React.FC<Props> = ({
           <ul className="dropdown-open">
             <li
               onClick={() => {
-                handleChangeData({ type: "status", value: "Alive" });
+                setFilterProps({ type: "status", value: "Alive" });
               }}
             >
               Alive
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "status", value: "Dead" });
+                setFilterProps({ type: "status", value: "Dead" });
               }}
             >
               Dead
             </li>
             <li
               onClick={() => {
-                handleChangeData({ type: "status", value: "Unknown" });
+                setFilterProps({ type: "status", value: "Unknown" });
               }}
             >
               Unknown
