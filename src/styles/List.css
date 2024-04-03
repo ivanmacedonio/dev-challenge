@@ -2,9 +2,9 @@
     max-width: 5rem;
 }
 
-.mainpage-cnt{
+.mainpage-cnt {
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 5rem;
     max-width: 80%;
 }
@@ -113,7 +113,8 @@
 .separator hr {
     background-color: rgb(197, 224, 118);
 }
-.pagination-buttons{
+
+.pagination-buttons {
     display: flex;
     justify-content: center;
     margin: 5rem 0;
@@ -121,7 +122,7 @@
 }
 
 
-.pagination-buttons button{
+.pagination-buttons button {
     font-size: 1rem;
     font-weight: bolder;
     outline: none;
@@ -131,4 +132,16 @@
     border-radius: 0.3rem;
     cursor: pointer;
 
+}
+
+@media (max-width: 768px) {
+    .mainpage-cnt {
+        display: flex;
+        flex-direction: column;
+    }
+    .list-map-cnt{
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+    }
 }
